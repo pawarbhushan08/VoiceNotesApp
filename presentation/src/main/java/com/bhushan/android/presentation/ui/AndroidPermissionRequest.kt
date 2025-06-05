@@ -1,7 +1,6 @@
 package com.bhushan.android.presentation.ui
 
 import android.Manifest
-import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,7 +22,6 @@ fun AudioPermissionRequest(
     onDenied: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val activity = context as? Activity
 
     var showDialog by remember { mutableStateOf(false) }
     var asked by remember { mutableStateOf(false) }

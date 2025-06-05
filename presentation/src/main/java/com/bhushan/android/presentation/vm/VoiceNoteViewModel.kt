@@ -2,13 +2,18 @@ package com.bhushan.android.presentation.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bhushan.android.domain.model.VoiceNote
 import com.bhushan.android.domain.usecase.GetAllNotesUseCase
 import com.bhushan.android.domain.usecase.StartRecordingUseCase
 import com.bhushan.android.domain.usecase.StopRecordingUseCase
 import com.bhushan.android.presentation.model.VoiceNoteUIState
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 sealed class VoiceNoteEvent {
@@ -46,7 +51,13 @@ class VoiceNoteViewModel(
     fun onRecordClicked() {
         if (_uiState.value.isRecording || _uiState.value.isRecordingEditId != null) return
         transcriptJob?.cancel()
-        _uiState.update { it.copy(isRecording = true, currentTranscript = "", recordingMillis = 0L) }
+        _uiState.update {
+            it.copy(
+                isRecording = true,
+                currentTranscript = "",
+                recordingMillis = 0L
+            )
+        }
         transcriptJob = viewModelScope.launch {
             _events.emit(VoiceNoteEvent.ShowSnackbar("Recording started"))
             val startTime = System.currentTimeMillis()
@@ -68,7 +79,13 @@ class VoiceNoteViewModel(
         viewModelScope.launch {
             val transcript = _uiState.value.currentTranscript
             stopRecordingUseCase(transcript)
-            _uiState.update { it.copy(isRecording = false, currentTranscript = "", recordingMillis = 0L) }
+            _uiState.update {
+                it.copy(
+                    isRecording = false,
+                    currentTranscript = "",
+                    recordingMillis = 0L
+                )
+            }
             _events.emit(
                 if (transcript.isNotBlank())
                     VoiceNoteEvent.ShowSnackbar("Note saved")
@@ -104,7 +121,13 @@ class VoiceNoteViewModel(
         transcriptJob?.cancel()
         val note = _uiState.value.notes.find { it.id == noteId }
         val oldText = note?.text ?: ""
-        _uiState.update { it.copy(isRecordingEditId = noteId, currentTranscript = oldText, recordingMillis = 0L) }
+        _uiState.update {
+            it.copy(
+                isRecordingEditId = noteId,
+                currentTranscript = oldText,
+                recordingMillis = 0L
+            )
+        }
         transcriptJob = viewModelScope.launch {
             _events.emit(VoiceNoteEvent.ShowSnackbar("Recording for edit started"))
             val startTime = System.currentTimeMillis()
@@ -135,7 +158,13 @@ class VoiceNoteViewModel(
                 _events.emit(VoiceNoteEvent.ShowSnackbar("No new audio, note unchanged"))
             }
             loadAllNotes()
-            _uiState.update { it.copy(isRecordingEditId = null, currentTranscript = "", recordingMillis = 0L) }
+            _uiState.update {
+                it.copy(
+                    isRecordingEditId = null,
+                    currentTranscript = "",
+                    recordingMillis = 0L
+                )
+            }
         }
     }
 }

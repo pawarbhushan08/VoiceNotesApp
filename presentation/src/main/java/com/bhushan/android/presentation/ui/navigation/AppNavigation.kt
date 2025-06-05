@@ -6,8 +6,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.bhushan.android.presentation.ui.VoiceNoteDetailScreen
 import com.bhushan.android.presentation.ui.VoiceNoteMainScreen
-import com.bhushan.android.presentation.vm.VoiceNoteViewModel
-import org.koin.androidx.compose.koinViewModel
 
 sealed class Screen(val route: String) {
     object VoiceRecorder : Screen("voice_recorder")

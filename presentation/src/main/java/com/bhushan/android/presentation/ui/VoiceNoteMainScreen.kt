@@ -131,7 +131,6 @@ fun VoiceNoteMainScreen(
                         VoiceRecordingControl(
                             isRecording = state.isRecording,
                             elapsedMillis = state.recordingMillis,
-                            onRecordClick = viewModel::onRecordClicked,
                             onStopClick = viewModel::onStopClicked
                         )
                     }
@@ -239,7 +238,6 @@ fun VoiceNoteGridItem(
 fun VoiceRecordingControl(
     isRecording: Boolean,
     elapsedMillis: Long,
-    onRecordClick: () -> Unit,
     onStopClick: () -> Unit
 ) {
     if (isRecording) {
