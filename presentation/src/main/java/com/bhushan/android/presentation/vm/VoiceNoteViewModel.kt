@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 sealed class VoiceNoteEvent {
-    data class ShowSnackbar(val message: String) : VoiceNoteEvent()
+    data class ShowSnackBar(val message: String) : VoiceNoteEvent()
 }
 
 class VoiceNoteViewModel(
@@ -46,7 +46,7 @@ class VoiceNoteViewModel(
                         _uiState.update { it.copy(notes = noteList) }
                     }
                 }.onFailure {
-                    _events.emit(VoiceNoteEvent.ShowSnackbar("Error loading notes"))
+                    _events.emit(VoiceNoteEvent.ShowSnackBar("Error loading notes"))
                 }
         }
     }
@@ -62,7 +62,7 @@ class VoiceNoteViewModel(
             )
         }
         transcriptJob = viewModelScope.launch {
-            _events.emit(VoiceNoteEvent.ShowSnackbar("Recording started"))
+            _events.emit(VoiceNoteEvent.ShowSnackBar("Recording started"))
             val startTime = System.currentTimeMillis()
             startRecordingUseCase().collect { text ->
                 // Even if nothing is said, collect might emit empty string
@@ -91,9 +91,9 @@ class VoiceNoteViewModel(
             }
             _events.emit(
                 if (transcript.isNotBlank())
-                    VoiceNoteEvent.ShowSnackbar("Note saved")
+                    VoiceNoteEvent.ShowSnackBar("Note saved")
                 else
-                    VoiceNoteEvent.ShowSnackbar("Empty note discarded")
+                    VoiceNoteEvent.ShowSnackBar("Empty note discarded")
             )
             loadAllNotes()
         }
@@ -106,7 +106,7 @@ class VoiceNoteViewModel(
                 stopRecordingUseCase.repository.saveNote(
                     note.copy(text = newText, timestamp = System.currentTimeMillis())
                 )
-                _events.emit(VoiceNoteEvent.ShowSnackbar("Note updated"))
+                _events.emit(VoiceNoteEvent.ShowSnackBar("Note updated"))
                 loadAllNotes()
             }
         }
@@ -125,7 +125,7 @@ class VoiceNoteViewModel(
             )
         }
         transcriptJob = viewModelScope.launch {
-            _events.emit(VoiceNoteEvent.ShowSnackbar("Recording for edit started"))
+            _events.emit(VoiceNoteEvent.ShowSnackBar("Recording for edit started"))
             val startTime = System.currentTimeMillis()
             startRecordingUseCase().collect { newText ->
                 // Append new text to old text
@@ -152,9 +152,9 @@ class VoiceNoteViewModel(
                 stopRecordingUseCase.repository.saveNote(
                     note.copy(text = transcript, timestamp = System.currentTimeMillis())
                 )
-                _events.emit(VoiceNoteEvent.ShowSnackbar("Note updated with audio"))
+                _events.emit(VoiceNoteEvent.ShowSnackBar("Note updated with audio"))
             } else if (note != null) {
-                _events.emit(VoiceNoteEvent.ShowSnackbar("No new audio, note unchanged"))
+                _events.emit(VoiceNoteEvent.ShowSnackBar("No new audio, note unchanged"))
             }
             loadAllNotes()
             _uiState.update {

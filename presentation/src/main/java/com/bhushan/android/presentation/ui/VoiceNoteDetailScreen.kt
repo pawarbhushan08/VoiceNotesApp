@@ -60,7 +60,7 @@ fun VoiceNoteDetailScreen(
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
-                is VoiceNoteEvent.ShowSnackbar -> {
+                is VoiceNoteEvent.ShowSnackBar -> {
                     snackbarHostState.showSnackbar(event.message)
                 }
             }
