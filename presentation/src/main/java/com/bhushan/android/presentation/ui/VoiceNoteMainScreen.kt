@@ -305,5 +305,5 @@ fun AnimatedMic(elapsedMillis: Long) {
 fun formatMillis(ms: Long): String {
     val seconds = ms / 1000 % 60
     val minutes = ms / 1000 / 60
-    return String.format("%02d:%02d", minutes, seconds)
+    return String.format(buildString { append("%02d:%02d") }, minutes, seconds)
 }
