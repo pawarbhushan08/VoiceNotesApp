@@ -1,5 +1,6 @@
 package com.bhushan.android.presentation.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,6 +39,7 @@ import com.bhushan.android.presentation.vm.VoiceNoteEvent
 import com.bhushan.android.presentation.vm.VoiceNoteViewModel
 import org.koin.androidx.compose.koinViewModel
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VoiceNoteDetailScreen(
