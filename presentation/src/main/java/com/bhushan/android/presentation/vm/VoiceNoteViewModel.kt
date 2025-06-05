@@ -33,15 +33,13 @@ class VoiceNoteViewModel(
     val events: SharedFlow<VoiceNoteEvent> = _events.asSharedFlow()
 
     private var transcriptJob: Job? = null
-    private var searchJob: Job? = null
 
     init {
         loadAllNotes()
     }
 
     private fun loadAllNotes() {
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
+        viewModelScope.launch {
             getAllNotesUseCase().collect { noteList ->
                 _uiState.update { it.copy(notes = noteList) }
             }
@@ -94,13 +92,6 @@ class VoiceNoteViewModel(
             )
             loadAllNotes()
         }
-    }
-
-    fun onSearchQueryChanged(query: String) {
-        _uiState.update { it.copy(searchQuery = query) }
-        // TODO: Implement search logic if needed
-        // searchJob?.cancel()
-        // searchJob = viewModelScope.launch { ... }
     }
 
     fun editVoiceNote(noteId: Long, newText: String) {
