@@ -40,9 +40,14 @@ class VoiceNoteViewModel(
 
     private fun loadAllNotes() {
         viewModelScope.launch {
-            getAllNotesUseCase().collect { noteList ->
-                _uiState.update { it.copy(notes = noteList) }
-            }
+            runCatching { getAllNotesUseCase() }
+                .onSuccess { notes ->
+                    notes.collect { noteList ->
+                        _uiState.update { it.copy(notes = noteList) }
+                    }
+                }.onFailure {
+                    _events.emit(VoiceNoteEvent.ShowSnackbar("Error loading notes"))
+                }
         }
     }
 
@@ -140,12 +145,15 @@ class VoiceNoteViewModel(
         viewModelScope.launch {
             val transcript = _uiState.value.currentTranscript
             val note = _uiState.value.notes.find { it.id == noteId }
-            if (note != null && transcript.isNotBlank()) {
+            val originalText = note?.text ?: ""
+
+            // Check if transcript is different from original text
+            if (note != null && transcript != originalText) {
                 stopRecordingUseCase.repository.saveNote(
                     note.copy(text = transcript, timestamp = System.currentTimeMillis())
                 )
                 _events.emit(VoiceNoteEvent.ShowSnackbar("Note updated with audio"))
-            } else if (note != null && transcript.isBlank()) {
+            } else if (note != null) {
                 _events.emit(VoiceNoteEvent.ShowSnackbar("No new audio, note unchanged"))
             }
             loadAllNotes()

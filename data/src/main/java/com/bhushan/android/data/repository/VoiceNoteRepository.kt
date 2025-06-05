@@ -15,9 +15,9 @@ class VoiceNoteRepositoryImpl(
         dao.insert(VoiceNoteEntity.fromDomain(note))
     }
 
-    override fun getAllNotes(): Flow<List<VoiceNote>> =
+    override suspend fun getAllNotes(): Flow<List<VoiceNote>> =
         dao.getAllNotes().map { list -> list.map { it.asDomain() } }
 
-    override fun searchNotes(query: String): Flow<List<VoiceNote>> =
-        dao.searchNotes(query).map { list -> list.map { it.asDomain() } }
+//    override fun searchNotes(query: String): Flow<List<VoiceNote>> =
+//        dao.searchNotes(query).map { list -> list.map { it.asDomain() } }
 }
