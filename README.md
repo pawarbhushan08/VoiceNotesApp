@@ -58,4 +58,4 @@ A beautiful, modern Android app to record, browse, and edit your voice notes—b
 ---
 
 ## 📣 Feedback
-Feel free to [open an issue](https://github.com/your-repo/issues) or submit a pull request for improvements!
+Feel free to [open an issue](https://github.com/pawarbhushan08/VoiceNotesApp/issues) or submit a pull request for improvements!
